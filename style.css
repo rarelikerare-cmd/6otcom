@@ -1,0 +1,197 @@
+/* ============ 6OT.COM — PORTFOLIO ============ */
+
+/* dark only — no theme toggle */
+:root {
+  --paper: #0b0b09;
+  --ink: #e8e6dd;
+  --dim: #6d6b60;
+  --blue: #5a63ff;
+  --line: rgba(232, 230, 221, 0.5);
+  --mono: "SF Mono", ui-monospace, Menlo, "IBM Plex Mono", "Courier New", monospace;
+  --grotesk: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body { height: 100%; }
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--grotesk);
+  overflow: hidden;
+  transition: background 0.25s, color 0.25s;
+}
+
+.mono { font-family: var(--mono); font-size: 11px; letter-spacing: 0.02em; }
+.dim { color: var(--dim); }
+
+/* ============ TOPBAR ============ */
+
+.topbar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  font-family: var(--mono);
+  font-size: 11px;
+  background: var(--paper);
+  border-bottom: 1px solid var(--line);
+  transition: background 0.25s;
+}
+
+.topbar-left { display: flex; align-items: center; gap: 10px; }
+
+.barcode { width: 46px; height: 16px; fill: var(--ink); }
+
+.brand { font-weight: 700; letter-spacing: 0.08em; }
+
+.topbar-right { display: flex; gap: 18px; }
+
+@media (max-width: 600px) {
+  .topcenter { display: none; }
+}
+
+/* ============ STAGE ============ */
+
+.stage {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 1200px;
+  cursor: grab;
+  touch-action: none;
+}
+
+.stage.dragging { cursor: grabbing; }
+
+.sphere {
+  position: relative;
+  width: 0; height: 0;
+  transform-style: preserve-3d;
+}
+
+.card {
+  position: absolute;
+  top: 0; left: 0;
+  width: 140px;
+  margin: -50px 0 0 -70px;
+  cursor: pointer;
+}
+
+.card img {
+  width: 100%;
+  display: block;
+  filter: grayscale(1) contrast(1.05);
+  transition: filter 0.2s;
+  pointer-events: none;
+}
+
+.card:hover img { filter: none; }
+
+/* placeholder cards while /photos is empty */
+
+.card.ph {
+  border: 1px solid var(--line);
+  height: 96px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  color: var(--dim);
+  cursor: default;
+  background:
+    repeating-linear-gradient(45deg,
+      transparent 0, transparent 6px,
+      rgba(138, 135, 124, 0.12) 6px, rgba(138, 135, 124, 0.12) 7px),
+    var(--paper);
+}
+
+.card.ph .no { font-size: 12px; color: var(--ink); }
+
+@media (max-width: 600px) {
+  .card { width: 96px; margin: -34px 0 0 -48px; }
+  .card.ph { height: 66px; }
+}
+
+/* ============ LEGEND ============ */
+
+.legend {
+  position: fixed;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+  justify-content: center;
+  color: var(--dim);
+  width: max-content;
+  max-width: 95vw;
+}
+
+.legend span { color: var(--ink); }
+
+/* ============ LIGHTBOX ============ */
+
+#lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  background: color-mix(in srgb, var(--paper) 96%, transparent);
+  cursor: zoom-out;
+}
+
+#lightbox[hidden] { display: none; }
+
+#lightbox img {
+  max-width: 88vw;
+  max-height: 82vh;
+  border: 1px solid #e8e6dd;
+  background: #e8e6dd;
+  padding: 2px;
+}
+
+#lightboxCaption { color: var(--dim); }
+
+#lightboxOriginal {
+  color: var(--blue);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+/* ============ GRAIN ============ */
+
+.grain {
+  position: fixed;
+  inset: -50%;
+  z-index: 400;
+  pointer-events: none;
+  opacity: 0.10;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: grain 0.9s steps(4) infinite;
+}
+
+@keyframes grain {
+  0% { transform: translate(0, 0); }
+  25% { transform: translate(-2%, 1%); }
+  50% { transform: translate(1%, -2%); }
+  75% { transform: translate(-1%, 2%); }
+  100% { transform: translate(2%, -1%); }
+}

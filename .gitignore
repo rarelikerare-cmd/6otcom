@@ -1,0 +1,7 @@
+# full-res originals stay local (huge); the built docs/ has the web sizes
+/photos/
+# moodboard references, not for publishing
+/assets/
+# old build output name
+/dist/
+.DS_Store

@@ -14,7 +14,7 @@ const { execFileSync } = require("child_process");
 
 const ROOT = __dirname;
 const DIST = path.join(ROOT, "docs");
-const DOMAIN = "6otcom.com";
+const DOMAIN = "dxwe.online";
 const IMAGE_RE = /\.(jpe?g|png|gif|webp|avif)$/i;
 
 fs.rmSync(DIST, { recursive: true, force: true });

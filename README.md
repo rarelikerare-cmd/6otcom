@@ -1,4 +1,4 @@
-# 6otcom.com
+# dxwe.online
 
 dxwe portfolio — 3D spinning photo sphere.
 

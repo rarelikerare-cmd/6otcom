@@ -5,3 +5,7 @@
 # old build output name
 /dist/
 .DS_Store
+
+# only the landing frame is published; the other texture experiments stay local
+background/*
+!background/landing.jpg

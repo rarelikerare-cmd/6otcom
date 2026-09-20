@@ -2,50 +2,104 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>dxwe — PORTFOLIO</title>
-<link rel="stylesheet" href="style.css">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#000000">
+<title>dxwe</title>
+<link rel="preload" as="image" href="background/landing.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   LANDING — one photograph, one name, one screen. No scroll.
+   The name is the only interface: it is the link into the work.
+   ============================================================ */
+
+*{margin:0;padding:0;box-sizing:border-box}
+
+html,body{height:100%;overflow:hidden}
+
+body{
+  background:#000;
+  font-family:"Archivo","Helvetica Neue",Arial,sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* the frame is a background layer, cover-positioned dead centre */
+.cover{
+  position:fixed;inset:0;
+  background-size:cover;
+  background-position:50% 50%;
+  background-repeat:no-repeat;
+  opacity:0;
+  transition:opacity 1.2s ease;
+}
+.cover.in{opacity:1}
+
+/* the stage centres the name; the link is only the name itself,
+   so the hover state belongs to the word and not to the screen */
+.stage{
+  position:fixed;inset:0;
+  display:flex;align-items:center;justify-content:center;
+  padding:0 4vw;
+}
+.enter{display:inline-block;text-decoration:none;line-height:0}
+
+.enter span{
+  /* glass: the name is a translucent pane with a lit edge, so the
+     photograph reads straight through it */
+  color:rgba(255,255,255,.22);
+  -webkit-text-stroke:1.1px rgba(255,255,255,.58);
+  text-shadow:0 1px 28px rgba(255,255,255,.22);
+  /* Proxima Nova Condensed Black stand-in: Archivo at width 78 / weight 900 */
+  font-variation-settings:"wdth" 78,"wght" 900;
+  /* The reference sets its name at 70px, where 23 characters span
+     ~77% of the viewport. "DXWE" is four characters, so matching
+     the number would lose the effect — this matches the effect:
+     the name spans the frame. One value to change if you disagree. */
+  font-size:clamp(34px,15vw,180px);
+  line-height:.92;
+  letter-spacing:-.01em;
+  text-align:center;
+  white-space:nowrap;
+  transition:
+    color .45s cubic-bezier(.23,1,.32,1),
+    -webkit-text-stroke-color .45s cubic-bezier(.23,1,.32,1),
+    text-shadow .45s cubic-bezier(.23,1,.32,1);
+}
+
+/* hover is the exact inverse: the pane fills in, solid white */
+.enter:hover span,
+.enter:focus-visible span{
+  color:#fff;
+  -webkit-text-stroke-color:rgba(255,255,255,0);
+  text-shadow:0 2px 34px rgba(0,0,0,.28);
+}
+
+@media (prefers-reduced-motion:reduce){
+  .cover,.enter span{transition:none}
+  .enter:hover span{color:#fff}
+}
+</style>
 </head>
 <body>
 
-<header class="topbar">
-  <div class="topbar-left">
-    <svg class="barcode" viewBox="0 0 60 18" preserveAspectRatio="none" aria-hidden="true">
-      <rect x="0" width="2" height="18"/><rect x="4" width="1" height="18"/>
-      <rect x="7" width="3" height="18"/><rect x="12" width="1" height="18"/>
-      <rect x="15" width="2" height="18"/><rect x="19" width="4" height="18"/>
-      <rect x="25" width="1" height="18"/><rect x="28" width="2" height="18"/>
-      <rect x="32" width="1" height="18"/><rect x="35" width="3" height="18"/>
-      <rect x="40" width="1" height="18"/><rect x="43" width="2" height="18"/>
-      <rect x="47" width="1" height="18"/><rect x="50" width="4" height="18"/>
-      <rect x="56" width="1" height="18"/><rect x="58" width="2" height="18"/>
-    </svg>
-    <span class="brand">dxwe</span>
-  </div>
-  <div class="topcenter mono dim">PORTFOLIO / SPATIAL MODE v3.1</div>
-  <div class="topbar-right mono">
-    <span id="clock">00:00:00</span>
-    <span class="dim" id="count">IMG 00</span>
-  </div>
-</header>
-
-<main class="stage" id="stage">
-  <div class="sphere" id="sphere"></div>
-</main>
-
-<div class="legend mono">
-  <span>DRAG&nbsp;TO&nbsp;SPIN</span>
-  <span>CLICK&nbsp;TO&nbsp;OPEN</span>
+<div class="cover" id="cover"></div>
+<div class="stage">
+  <a class="enter" href="work.html?enter=1" aria-label="Enter the work">
+    <span>DXWE</span>
+  </a>
 </div>
 
-<div id="lightbox" hidden>
-  <img alt="">
-  <p class="mono" id="lightboxCaption"></p>
-  <a class="mono" id="lightboxOriginal" target="_blank" rel="noopener">OPEN ORIGINAL &#8599;</a>
-</div>
-
-<div class="grain" aria-hidden="true"></div>
-
-<script src="main.js"></script>
+<script>
+/* Browser-ready copy of the user's landing.TIF; original is untouched. */
+(()=>{
+  const cover=document.getElementById('cover');
+  const url='background/landing.jpg';
+  const pre=new Image();
+  pre.onload=()=>{cover.style.backgroundImage=`url("${url}")`;cover.classList.add('in')};
+  pre.src=url;
+})();
+</script>
 </body>
 </html>

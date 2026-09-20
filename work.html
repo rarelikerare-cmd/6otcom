@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#ffffff">
+<title>work — dxwe</title>
+<link rel="preload" as="image" href="web/IMG_6676.JPG">
+<script>if(new URLSearchParams(location.search).has('enter')&&!matchMedia('(prefers-reduced-motion:reduce)').matches)document.documentElement.classList.add('arriving');</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   WORK — the scatter.
+
+   The whole layout is one rule: every frame is FRAME_W wide and
+   they stack with NO vertical gap, each one shifted horizontally
+   on a four-step cycle — right-flush, centre, left-flush, centre.
+   All the white space on this page is made by that offset alone.
+   ============================================================ */
+
+:root{
+  --paper:#f3f2ee;                 /* sheet */
+  --frame-w:20;                    /* % of viewport width */
+  --ink:#000;
+  --muted:#c9c9c9;
+  --pad:80px;
+  --ease:cubic-bezier(.23,1,.32,1);
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+
+body{
+  position:relative;
+  color:var(--ink);
+  font-family:"Archivo","Helvetica Neue",Arial,sans-serif;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+
+  /* The sheet. Three layers, because paper is not one noise:
+     a fine tooth, a stretched fibre running across the grain, and
+     a slow cloudy mottle that makes the stock look uneven. Each
+     tile is white with only a few percent of noise on it, so the
+     multiply darkens the sheet barely at all. It scrolls with the
+     page, so the whole thing reads as one sheet.                 */
+  background-color:var(--paper);
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='t'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.95' numOctaves='4' seed='17' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' fill='%23ffffff'/%3E%3Crect width='300' height='300' filter='url(%23t)' opacity='0.15'/%3E%3C/svg%3E"),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='760' height='760'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.013 0.15' numOctaves='3' seed='9' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='760' height='760' fill='%23ffffff'/%3E%3Crect width='760' height='760' filter='url(%23f)' opacity='0.05'/%3E%3C/svg%3E"),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1100' height='1100'%3E%3Cfilter id='m'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.006' numOctaves='5' seed='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='1100' height='1100' fill='%23ffffff'/%3E%3Crect width='1100' height='1100' filter='url(%23m)' opacity='0.085'/%3E%3C/svg%3E");
+  background-size:300px 300px,760px 760px,1100px 1100px;
+  background-blend-mode:multiply,multiply,multiply;
+}
+body.locked{overflow:hidden}
+
+/* The photographs are printed ON the stock, so the tooth carries
+   over them too — absolute, not fixed, so it stays registered to
+   the sheet while the page scrolls. */
+body::after{
+  content:"";position:absolute;top:0;left:0;right:0;height:100%;
+  z-index:50;pointer-events:none;
+  opacity:.55;mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='t'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.95' numOctaves='4' seed='17' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' fill='%23ffffff'/%3E%3Crect width='300' height='300' filter='url(%23t)' opacity='0.15'/%3E%3C/svg%3E");
+  background-size:300px 300px;
+}
+
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+
+/* ---------- header ---------- */
+
+.masthead{
+  position:relative;z-index:30;
+  display:flex;align-items:center;justify-content:space-between;gap:20px;
+  padding:26px var(--pad) 0;
+}
+
+.wordmark{
+  font-variation-settings:"wdth" 78,"wght" 900;
+  font-size:clamp(20px,2.7vw,30px);
+  line-height:1;
+}
+
+/* same face, same width, same weight, same size as the wordmark */
+.contact{
+  font-variation-settings:"wdth" 78,"wght" 900;
+  font-size:clamp(20px,2.7vw,30px);
+  line-height:1;color:var(--ink);
+  transition:opacity .25s var(--ease);
+}
+.contact:hover{opacity:.5}
+
+/* ---------- the scatter ----------
+
+   The whole layout is one rule: every frame is FRAME_W wide and
+   they stack with NO vertical gap, each one shifted horizontally
+   on a four-step cycle — right-flush, centre, left-flush, centre.
+   All the empty space on this page is made by that offset alone,
+   and nothing is ever cropped.
+   ---------------------------------------------------------- */
+
+.scatter{position:relative;z-index:10;padding-top:56px}
+
+.frame{
+  display:block;
+  width:calc(var(--frame-w) * 1vw);
+  overflow:hidden;
+  border:0;padding:0;
+  cursor:pointer;line-height:0;
+}
+/* right-flush → centre → left-flush → centre */
+.frame:nth-child(4n+1){margin-left:calc((100 - var(--frame-w)) * 1vw)}
+.frame:nth-child(4n+2){margin-left:calc((100 - var(--frame-w)) / 2 * 1vw)}
+.frame:nth-child(4n+3){margin-left:0}
+.frame:nth-child(4n+4){margin-left:calc((100 - var(--frame-w)) / 2 * 1vw)}
+
+.frame img{
+  width:100%;height:auto;display:block;
+  transition:transform .4s var(--ease);
+}
+@media (hover:hover) and (pointer:fine){
+  .frame:hover img{transform:scale(1.1)}
+}
+
+/* ---------- footer ---------- */
+
+.colophon{
+  display:flex;justify-content:space-between;align-items:flex-end;gap:16px;
+  padding:64px var(--pad) 34px;
+  font-variation-settings:"wdth" 82,"wght" 800;
+  font-size:11px;color:var(--muted);
+}
+.colophon a:hover{color:var(--ink)}
+
+/* ---------- lightbox ---------- */
+
+/* Glass, not a blackout: the wall stays visible underneath,
+   pushed out of focus and tinted down, with a fine grain over
+   the whole plate so the blur does not read as plastic.        */
+.lightbox{
+  position:fixed;inset:0;z-index:60;
+  background:rgba(18,18,20,.22);
+  backdrop-filter:blur(16px) saturate(1.2);
+  -webkit-backdrop-filter:blur(16px) saturate(1.2);
+  display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px;
+  opacity:0;pointer-events:none;transition:opacity .3s var(--ease);
+  cursor:zoom-out;
+}
+.lightbox.open{opacity:1;pointer-events:auto}
+
+/* the texture on the glass */
+.lightbox::before{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  opacity:.16;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:180px 180px;
+}
+
+/* everything sits on top of the grain */
+.lightbox img,.lightbox .lb-meta,.lightbox button{position:relative;z-index:1}
+
+.lightbox img{
+  max-width:92vw;max-height:82vh;cursor:default;
+  box-shadow:0 20px 70px rgba(0,0,0,.45);
+}
+.lb-meta{
+  color:#e9e9e9;font-size:11px;
+  text-shadow:0 1px 3px rgba(0,0,0,.5);
+  font-variation-settings:"wdth" 82,"wght" 800;
+}
+.lb-nav{
+  position:absolute;top:50%;transform:translateY(-50%);
+  width:52px;height:52px;border-radius:50%;
+  color:#fff;font-size:24px;line-height:1;
+  background:rgba(0,0,0,.28);
+  transition:background .2s var(--ease);
+}
+.lb-nav:hover{background:rgba(0,0,0,.5)}
+.lb-prev{left:clamp(8px,2.6vw,34px)}
+.lb-next{right:clamp(8px,2.6vw,34px)}
+.lb-close{
+  position:absolute;top:22px;right:clamp(10px,2.6vw,34px);
+  width:44px;height:44px;border-radius:50%;
+  color:#fff;font-size:22px;background:rgba(0,0,0,.28);
+  transition:background .2s var(--ease);
+}
+.lb-close:hover{background:rgba(0,0,0,.5)}
+
+/* ---------- responsive ----------
+   On a phone a 20vw frame is a postage stamp, so the frames widen
+   and the same four-step cycle keeps doing the work.             */
+
+@media (max-width:900px){ :root{--frame-w:32;--pad:34px} }
+@media (max-width:600px){
+  :root{--frame-w:62;--pad:20px}
+  .masthead{gap:14px}
+}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{transition-duration:.001ms !important}
+  .frame:hover img{transform:none}
+}
+/* User-supplied paper photograph, background only. */
+body{
+  background-color:#080808;
+  background-image:none;
+  background-size:cover;
+  background-position:center;
+  background-repeat:no-repeat;
+  background-attachment:fixed;
+  background-blend-mode:normal;
+}
+body::after{content:none}
+body::after{
+  content:none;
+}
+/* One-screen photographic carousel. */
+html,body{height:100%;overflow:hidden}
+body{height:100dvh}
+.masthead{position:absolute;inset:0 0 auto; padding-top:26px}
+.scatter{position:absolute;inset:85px 0 95px;display:flex;align-items:center;gap:clamp(28px,6vw,100px);padding:0 calc((100vw - min(70vw,1000px))/2);overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scrollbar-width:none;overscroll-behavior-x:contain}
+.scatter::-webkit-scrollbar{display:none}
+.scatter .frame:nth-child(n){margin:0;flex:0 0 min(70vw,1000px);width:min(70vw,1000px);height:100%;display:flex;align-items:center;justify-content:center;overflow:visible;scroll-snap-align:center}
+.scatter .frame img{width:auto;height:auto;max-width:100%;max-height:min(60dvh,650px);object-fit:contain;transform:none}
+.carousel-nav{position:absolute;bottom:62px;left:50%;transform:translateX(-50%);display:flex;gap:24px;z-index:20}
+.carousel-nav button{width:44px;height:44px;font-size:22px}
+.colophon{position:absolute;bottom:0;left:0;right:0;padding:16px var(--pad);font-size:10px}
+.lightbox button{position:absolute}
+@media(max-width:600px){
+ .scatter{inset:75px 0 110px;padding-inline:10vw;gap:7vw}
+ .scatter .frame:nth-child(n){flex-basis:80vw;width:80vw}
+ .scatter .frame img{max-height:62dvh}
+ .colophon{font-size:8px}
+}
+
+:root{--rim:32px}
+.masthead .wordmark,.masthead .contact{font-size:14px}
+body::before{content:"";position:fixed;inset:var(--rim);border:2px solid #FA5053;pointer-events:none;z-index:45;mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .6 .4'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E")}
+.masthead{inset:0 0 auto;height:var(--rim);padding:0 var(--rim);z-index:46}
+.scatter{inset:calc(var(--rim) + 75px) calc(var(--rim) + 3px) calc(var(--rim) + 3px);padding:0;display:block;overflow:hidden;touch-action:pan-y;cursor:grab}
+.scatter:active{cursor:grabbing}
+.scatter .frame:nth-child(n){display:flex;align-items:center;justify-content:center;margin:0;padding:0;max-width:none;overflow:visible;cursor:zoom-in}
+.scatter .frame img{width:100%;height:100%;max-width:none;max-height:none;object-fit:contain;box-shadow:0 18px 32px -18px rgba(0,0,0,.38);pointer-events:none;user-select:none}
+.scatter .frame{will-change:transform,filter}
+.colophon{bottom:4px;padding:4px var(--rim);font-size:8px}
+body::before{inset:0;border-width:var(--rim)}
+.scatter{inset:var(--rim) 0}
+.scatter:focus-visible{outline:1px dashed #FA5053;outline-offset:-4px}
+.colophon{height:var(--rim);bottom:0;align-items:center;padding:0 var(--rim);z-index:46;color:#252525}
+@media(max-width:600px){
+ :root{--rim:28px}
+ .masthead{padding:0 24px}
+ .scatter{inset:var(--rim) 0}
+ body::before{border-left-width:24px;border-right-width:24px}
+ .colophon{padding:0 24px}
+}
+body::before{content:none}
+.masthead{justify-content:center}
+.wordmark,.contact,.colophon{color:#fff}
+.colophon{color:#fff}
+.bottom-contact{position:fixed;bottom:0;left:50%;transform:translateX(-50%);height:var(--rim);display:flex;align-items:center;justify-content:center;z-index:47;font-size:14px}
+.entry-photo{display:none}
+.arriving .entry-photo{display:block;position:fixed;inset:0;z-index:55;background:#000 url('background/landing.jpg') center/cover no-repeat;pointer-events:none}
+.arriving .entry-photo-match{display:block;position:fixed;inset:0;z-index:56;background:#000 url('web/IMG_6676.JPG') center/cover no-repeat;pointer-events:none;opacity:0}
+.arriving .masthead,.arriving .bottom-contact,.arriving .colophon{opacity:0}
+.arriving .scatter{opacity:0;pointer-events:none}
+</style>
+</head>
+<body>
+<div class="entry-photo" aria-hidden="true"></div>
+<div class="entry-photo-match" aria-hidden="true"></div>
+
+<header class="masthead">
+  <a class="wordmark" href="index.html">DXWE</a>
+</header>
+<a class="contact bottom-contact" href="https://www.instagram.com/_dxwe/" target="_blank" rel="noopener">CONTACT</a>
+
+<main class="scatter" id="scatter" tabindex="0" aria-label="Photograph carousel" aria-roledescription="carousel"></main>
+
+
+<footer class="colophon">
+  <a href="index.html">dxwe</a>
+  <span>&copy; <span id="year"></span> all rights reserved dxwe</span>
+</footer>
+
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Photograph">
+  <button class="lb-close" id="lbClose" aria-label="Close">&times;</button>
+  <button class="lb-nav lb-prev" id="lbPrev" aria-label="Previous">&larr;</button>
+  <img id="lbImg" alt="">
+  <p class="lb-meta" id="lbMeta"></p>
+  <button class="lb-nav lb-next" id="lbNext" aria-label="Next">&rarr;</button>
+</div>
+
+<script type="importmap">{"imports":{"three":"./vendor/three.core.js"}}</script>
+<script type="module">
+import {Scene,PerspectiveCamera} from 'three';
+import {CSS3DRenderer,CSS3DObject} from './vendor/CSS3DRenderer.js';
+const WEB='web/', THUMB='thumb/';
+const photoURL=file=>WEB+encodeURIComponent(file);
+const pad=n=>String(n).padStart(2,'0');
+
+const scatter=document.getElementById('scatter');
+const lb=document.getElementById('lightbox');
+const lbImg=document.getElementById('lbImg');
+const lbMeta=document.getElementById('lbMeta');
+let photos=[], index=0;
+
+document.getElementById('year').textContent=new Date().getFullYear();
+
+(async ()=>{
+  try{
+    const r=await fetch('photos.json',{cache:'no-store'});
+    if(r.ok) photos=await r.json();
+  }catch(e){}
+
+
+  const start=photos.indexOf('IMG_6676.JPG');
+  if(start>0) photos=[...photos.slice(start),...photos.slice(0,start)];
+  initCarousel();
+})();
+function initCarousel(){
+ const scene=new Scene(), camera=new PerspectiveCamera(40,1,1,8000);
+ const renderer=new CSS3DRenderer();
+ renderer.domElement.style.position='absolute';renderer.domElement.style.inset='0';
+ scatter.append(renderer.domElement);
+ let width=0,height=0,spacing=1,position=0,target=0,hover=-1,drag=null,moved=false;
+ const reduced=matchMedia('(prefers-reduced-motion:reduce)').matches;
+ const frames=photos.map((file,i)=>{
+  const button=document.createElement('button');button.className='frame';button.dataset.i=i;
+  button.setAttribute('aria-label','Open frame '+pad(i+1));
+  const img=new Image();
+  const nearStart=i<3||i>photos.length-3;
+  img.src=nearStart?photoURL(file):'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=';
+  img.dataset.full=nearStart?'1':'0';
+  img.alt='Frame '+pad(i+1);img.draggable=false;img.decoding='async';
+  button.append(img);
+  const object=new CSS3DObject(button);scene.add(object);
+  button.onpointerenter=()=>{if(!document.documentElement.classList.contains('arriving'))hover=i};button.onpointerleave=()=>{if(hover===i)hover=-1};
+  button.onfocus=()=>{target=i+Math.round((target-i)/photos.length)*photos.length;hover=i};
+  button.onblur=()=>{hover=-1};
+  img.onload=()=>resize();
+  return {object,button,img,scale:1};
+ });
+ function resize(){
+  width=scatter.clientWidth;height=scatter.clientHeight;renderer.setSize(width,height);
+  camera.aspect=width/height;camera.position.z=height/(2*Math.tan(20*Math.PI/180));camera.updateProjectionMatrix();
+  const maxW=width*(width<600?.58:.46),maxH=height*.48;
+  spacing=maxW+Math.max(35,width*.08);
+  frames.forEach(({button,img})=>{
+   const ratio=(img.naturalWidth||3)/(img.naturalHeight||2),w=Math.min(maxW,maxH*ratio);
+   button.style.width=w+'px';button.style.height=w/ratio+'px';
+  });
+ }
+ new ResizeObserver(resize).observe(scatter);resize();
+ scatter.addEventListener('wheel',e=>{
+  if(e.ctrlKey||lb.classList.contains('open'))return;
+  e.preventDefault();const delta=Math.abs(e.deltaX)>Math.abs(e.deltaY)?e.deltaX:e.deltaY;
+  target+=delta*(e.deltaMode===1?16:e.deltaMode===2?width:1)/spacing;
+ },{passive:false});
+ scatter.addEventListener('pointerdown',e=>{
+  if(e.button!==0)return;drag={x:e.clientX,start:target};moved=false;
+ });
+ window.addEventListener('pointermove',e=>{
+  if(!drag)return;
+  if(Math.abs(e.clientX-drag.x)>5){moved=true;target=drag.start-(e.clientX-drag.x)/spacing}
+ });
+ window.addEventListener('pointerup',()=>{drag=null});
+ window.addEventListener('pointercancel',()=>{drag=null;moved=false});
+ scatter.addEventListener('click',e=>{if(moved){e.preventDefault();e.stopImmediatePropagation();moved=false}},true);
+ scatter.addEventListener('keydown',e=>{
+  if(lb.classList.contains('open'))return;
+  if(e.key==='ArrowLeft'||e.key==='ArrowRight'){e.preventDefault();target+=e.key==='ArrowRight'?1:-1}
+ });
+ let previous=performance.now(),previousPosition=0,velocity=0;
+ let rendering=!document.documentElement.classList.contains('arriving');
+ function render(now){
+  const dt=Math.min((now-previous)/1000,.05);previous=now;
+  position+=(target-position)*(reduced?1:1-Math.exp(-12*dt));
+  velocity+=(position-previousPosition-velocity)*(reduced?1:1-Math.exp(-14*dt));
+  previousPosition=position;
+  frames.forEach(({object,button},i)=>{
+   const n=photos.length,offset=((i-position+n/2)%n+n)%n-n/2;
+   const arcStep=.36;
+   const arcRadius=spacing/arcStep;
+   const theta=offset*arcStep;
+   object.position.x=Math.sin(theta)*arcRadius;
+   object.position.z=(Math.cos(theta)-1)*arcRadius+(hover===i?35:0);
+   const visible=Math.abs(offset)<3.5;
+   button.style.visibility=visible?'visible':'hidden';
+   if(!visible)return;
+   if(button.querySelector('img').dataset.full!=='1'){
+    const image=button.querySelector('img');
+    image.src=photoURL(photos[i]);
+    image.dataset.full='1';
+   }
+   const edgeBlur=Math.max(0,Math.min(5,(Math.abs(offset)-.18)*3.2));
+   const motionBlur=Math.min(4.5,Math.abs(velocity)*6);
+   button.style.filter=reduced?'none':`blur(${Math.min(7,edgeBlur+motionBlur)}px)`;
+   object.rotation.y=reduced?0:-theta*.72;
+   const distanceScale=Math.max(.68,1-Math.abs(offset)*.13);
+   const targetScale=distanceScale*(hover===i?1.035:1);
+   const scale=object.scale.x+(targetScale-object.scale.x)*(reduced?1:1-Math.exp(-12*dt));
+   object.scale.setScalar(scale);
+  });
+  renderer.render(scene,camera);
+  if(rendering)requestAnimationFrame(render);
+ }
+ if(rendering)requestAnimationFrame(render);
+ async function entrance(){
+  if(!document.documentElement.classList.contains('arriving'))return;
+   const overlay=document.querySelector('.entry-photo');
+   const match=document.querySelector('.entry-photo-match');
+  try{
+   await frames[0].img.decode();
+   resize();
+   hover=-1;position=0;target=0;
+   render(performance.now());
+   const rect=frames[0].button.getBoundingClientRect();
+   const duration=1000,easing='cubic-bezier(.4,0,.2,1)';
+   const coverScale=Math.max(innerWidth/rect.width,innerHeight/rect.height);
+   const dx=innerWidth/2-(rect.left+rect.width/2),dy=innerHeight/2-(rect.top+rect.height/2);
+   const initialTransform=`translate3d(${dx}px,${dy}px,0) scale(${coverScale})`;
+   // Prepare both layers before motion; never switch geometry mid-transition.
+   for(const layer of [overlay,match]){
+    Object.assign(layer.style,{inset:'auto',left:rect.left+'px',top:rect.top+'px',width:rect.width+'px',height:rect.height+'px',transformOrigin:'50% 50%',transform:initialTransform,willChange:'transform,opacity'});
+   }
+   await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+   const motion=[{transform:initialTransform},{transform:'translate3d(0,0,0) scale(1)'}];
+   const timing={duration,easing,fill:'forwards'};
+   const shrink=match.animate(motion,timing);
+   const companion=overlay.animate(motion,timing);
+   const reveal=match.animate([{opacity:0},{opacity:1}],{duration:360,easing:'ease-in-out',fill:'forwards'});
+   // Share a timeline so the photographic layers cannot drift apart.
+   const start=document.timeline.currentTime;
+   for(const animation of [shrink,companion,reveal])animation.startTime=start;
+   reveal.finished.then(()=>{overlay.style.opacity='0'});
+   scatter.animate([{opacity:0},{opacity:1}],{duration:450,delay:400,easing,fill:'forwards'});
+   document.querySelectorAll('.masthead,.bottom-contact,.colophon').forEach(el=>el.animate([{opacity:0},{opacity:1}],{duration:350,delay:560,fill:'forwards'}));
+   await shrink.finished;
+  }catch(error){console.warn('Entrance skipped',error)}
+  finally{
+   document.documentElement.classList.remove('arriving');
+   overlay.remove();match.remove();
+   previous=performance.now();rendering=true;requestAnimationFrame(render);
+   history.replaceState(null,'',location.pathname);
+  }
+ }
+ entrance();
+}
+/* lightbox */
+
+scatter.addEventListener('click',e=>{
+  const f=e.target.closest('.frame');
+  if(f) open(Number(f.dataset.i));
+});
+function open(i){
+  index=(i+photos.length)%photos.length;
+  lbImg.src=photoURL(photos[index]);
+  lbImg.alt='Frame '+pad(index+1);
+  lbMeta.textContent=`${pad(index+1)} / ${pad(photos.length)}`;
+  lb.classList.add('open');document.body.classList.add('locked');
+}
+function close(){lb.classList.remove('open');document.body.classList.remove('locked')}
+const step=d=>open(index+d);
+document.getElementById('lbPrev').addEventListener('click',e=>{e.stopPropagation();step(-1)});
+document.getElementById('lbNext').addEventListener('click',e=>{e.stopPropagation();step(1)});
+document.getElementById('lbClose').addEventListener('click',close);
+lb.addEventListener('click',e=>{if(!e.target.closest('button')&&e.target!==lbImg)close()});
+
+addEventListener('keydown',e=>{
+  if(e.key==='Escape'){ if(lb.classList.contains('open')) close(); return; }
+  if(!lb.classList.contains('open'))return;
+  if(e.key==='ArrowLeft')step(-1);
+  if(e.key==='ArrowRight')step(1);
+});
+</script>
+</body>
+</html>
